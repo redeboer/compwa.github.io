@@ -6,6 +6,7 @@ ci:
     - pin-nb-requirements
     - prettier
     - pyright
+    - remove-empty-tags
     - taplo
 
 repos:
@@ -90,6 +91,25 @@ repos:
             .*\.svg
           )$
 
+  - repo: local
+    hooks:
+      - id: pin-nb-requirements
+        name: Check whether notebook contains a pip install line
+        description:
+          Specify which packages to install specifically in order to run
+          this notebook.
+        entry: python3 .pre-commit/pin_nb_requirements.py
+        language: system
+        types:
+          - jupyter
+
+      - id: remove-empty-tags
+        name: Remove empty tags from cell metadata in notebooks
+        entry: python3 .pre-commit/remove_empty_tags.py
+        language: system
+        types:
+          - jupyter
+
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v4.0.0-alpha.8
     hooks:
@@ -145,18 +165,6 @@ repos:
           (?x)^(
             docs/_static/favicon.ico
           )$
-
-  - repo: local
-    hooks:
-      - id: pin-nb-requirements
-        name: Check whether notebook contains a pip install line
-        description:
-          Specify which packages to install specifically in order to run
-          this notebook.
-        entry: python3 .pre-commit/pin_nb_requirements.py
-        language: system
-        types:
-          - jupyter
 
   - repo: https://github.com/ComPWA/mirrors-pyright
     rev: v1.1.364
